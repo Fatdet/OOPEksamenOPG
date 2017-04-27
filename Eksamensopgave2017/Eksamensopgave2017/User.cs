@@ -19,10 +19,11 @@ namespace Eksamensopgave2017
         public string UserName { get; private set; }
         public string Email { get; private set; }
         public decimal Balance { get; set; }
+        public  bool AllInfoCorrecet { get; }
 
         #region Setters
 
-        public bool SetFirstName(string firstName)
+        private bool SetFirstName(string firstName)
         {
             if (firstName == null)
             {
@@ -34,7 +35,7 @@ namespace Eksamensopgave2017
                 return true;
             }
         }
-        public bool SetLastName(string lastName)
+        private bool SetLastName(string lastName)
         {
             if (lastName == null)
             {
@@ -47,7 +48,7 @@ namespace Eksamensopgave2017
             }
         }
         // Returns false when name could not be set.
-        public bool SetUserName(string name)
+        private bool SetUserName(string name)
         {
             //-------
             // TODO Dobbelt tjek at ! er de rigtige steder
@@ -66,7 +67,7 @@ namespace Eksamensopgave2017
             }
         }
 
-        public bool SetEmail(string email)
+        private bool SetEmail(string email)
         {
             string local;
             string domain;
@@ -144,8 +145,21 @@ namespace Eksamensopgave2017
             return UserName.GetHashCode() + UserID;
         }
 #endregion
-        public User()
+        public User(string firstName, string lastName, string userName, string email )
         {
+            if (SetFirstName(firstName)
+                && SetLastName(lastName) 
+                && SetUserName(userName)
+                &&SetEmail(email))
+            {
+                AllInfoCorrecet = true;
+            }
+            else
+            {
+                AllInfoCorrecet = false;
+            }
+            
+            //TODO More logic here to determine if it should create this instance
             UserID = _id;
             _id = ++_id;
         }

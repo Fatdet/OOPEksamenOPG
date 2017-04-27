@@ -18,11 +18,8 @@ namespace Eksamensopgave2017
             //ui.Start();*/
 
 
-            User a = new User();
-            a.SetFirstName("Frederik");
-            a.SetLastName("Schrøder");
-            a.SetUserName("Fatdet");
-            a.SetEmail("Frederikhtxq12@gmail.com");
+            User a = new User("frederik","schrøder","fatdet","asd@asd.c");
+
 
             Console.WriteLine(a.UserID);
             Console.WriteLine(a.FirstName);
@@ -31,6 +28,9 @@ namespace Eksamensopgave2017
             Console.WriteLine(a.UserName);
             Console.WriteLine(a.GetHashCode());
 
+            SeasonalProduct b = new SeasonalProduct("test", 25,false,false,"26-12-2017","17-12-2017" );
+           
+            
             Console.ReadKey();
         }
     }
