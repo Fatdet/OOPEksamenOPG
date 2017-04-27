@@ -1,0 +1,7 @@
+c:\users\thomas\documents\visual studio 2015\Projects\Eksamensopgave2017\Eksamensopgave2017\bin\Debug\Eksamensopgave2017.exe.config
+C:\Users\frederik\Documents\Eksamensopgave2017\Eksamensopgave2017\bin\Debug\Eksamensopgave2017.exe.config
+C:\Users\frederik\Documents\Eksamensopgave2017\Eksamensopgave2017\bin\Debug\Eksamensopgave2017.exe
+C:\Users\frederik\Documents\Eksamensopgave2017\Eksamensopgave2017\bin\Debug\Eksamensopgave2017.pdb
+C:\Users\frederik\Documents\Eksamensopgave2017\Eksamensopgave2017\obj\Debug\Eksamensopgave2017.csprojResolveAssemblyReference.cache
+C:\Users\frederik\Documents\Eksamensopgave2017\Eksamensopgave2017\obj\Debug\Eksamensopgave2017.exe
+C:\Users\frederik\Documents\Eksamensopgave2017\Eksamensopgave2017\obj\Debug\Eksamensopgave2017.pdb

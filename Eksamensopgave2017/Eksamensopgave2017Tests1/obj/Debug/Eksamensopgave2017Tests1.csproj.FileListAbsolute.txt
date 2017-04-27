@@ -1,0 +1,9 @@
+C:\Users\frederik\Documents\Eksamensopgave2017\Eksamensopgave2017Tests1\bin\Debug\Eksamensopgave2017Tests1.dll
+C:\Users\frederik\Documents\Eksamensopgave2017\Eksamensopgave2017Tests1\bin\Debug\Eksamensopgave2017Tests1.pdb
+C:\Users\frederik\Documents\Eksamensopgave2017\Eksamensopgave2017Tests1\bin\Debug\Eksamensopgave2017.exe
+C:\Users\frederik\Documents\Eksamensopgave2017\Eksamensopgave2017Tests1\bin\Debug\nunit.framework.dll
+C:\Users\frederik\Documents\Eksamensopgave2017\Eksamensopgave2017Tests1\bin\Debug\Eksamensopgave2017.pdb
+C:\Users\frederik\Documents\Eksamensopgave2017\Eksamensopgave2017Tests1\bin\Debug\nunit.framework.xml
+C:\Users\frederik\Documents\Eksamensopgave2017\Eksamensopgave2017Tests1\obj\Debug\Eksamensopgave2017Tests1.csprojResolveAssemblyReference.cache
+C:\Users\frederik\Documents\Eksamensopgave2017\Eksamensopgave2017Tests1\obj\Debug\Eksamensopgave2017Tests1.dll
+C:\Users\frederik\Documents\Eksamensopgave2017\Eksamensopgave2017Tests1\obj\Debug\Eksamensopgave2017Tests1.pdb
