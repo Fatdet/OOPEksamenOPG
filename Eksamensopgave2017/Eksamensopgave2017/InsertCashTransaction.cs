@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Eksamensopgave2017
 {
-    class InsertCashTransaction : Transaction
+    public class InsertCashTransaction : Transaction
     {
         private const string _cashIn = "Cash In";
         public InsertCashTransaction(User buyer, decimal amount) : base(buyer, amount)

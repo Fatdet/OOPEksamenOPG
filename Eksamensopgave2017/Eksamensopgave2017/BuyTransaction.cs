@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Eksamensopgave2017
 {
-    class BuyTransaction : Transaction
+    public class BuyTransaction : Transaction
     {
         private const string _toBuy = "Bought item";
         public Product Product { get; }

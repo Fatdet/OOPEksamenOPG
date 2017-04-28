@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Eksamensopgave2017
 {
-    class Product
+    public class Product
     {
         private static int _id = 1;
         public int Id { get; }

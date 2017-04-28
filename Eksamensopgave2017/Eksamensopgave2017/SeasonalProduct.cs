@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Eksamensopgave2017
 {
 
-    class SeasonalProduct : Product
+    public class SeasonalProduct : Product
     {
         public DateTime StartDate { get; }
         public DateTime EndDate { get; }
