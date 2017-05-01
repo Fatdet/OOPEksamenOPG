@@ -18,5 +18,9 @@ namespace Eksamensopgave2017
             return _cashIn + Id + Buyer + Amount.ToString() + Date;
         }
         // TODO Implemt execute
+        public override void Execute(User buyer, decimal amount)
+        {
+            buyer.Balance += amount;
+        }
     }
 }

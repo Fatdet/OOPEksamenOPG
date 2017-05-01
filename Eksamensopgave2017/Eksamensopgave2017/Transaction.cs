@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Eksamensopgave2017
 {
     //todo mAYBE IMPLEMET AS ABSTRACT
-    public class Transaction
+    public abstract class Transaction
     {
         private static int _id = 1;
         public int Id { get; }
@@ -18,12 +18,14 @@ namespace Eksamensopgave2017
 
         public  Decimal Amount { get; }
 
+        // TODO er det nøsvenig at have den her?
         public override string ToString()
         {
             return Id.ToString() + Buyer + Amount.ToString() + Date;
         }
 
-        public Transaction(User buyer, decimal amount)
+        public abstract void Execute(User buyer, decimal amount);
+        protected Transaction(User buyer, decimal amount)
         {
             Id = _id;
             ++_id;
@@ -32,11 +34,5 @@ namespace Eksamensopgave2017
             Amount = amount;
             Execute(buyer, amount);
         }
-
-        public void Execute(User buyer, decimal amount)
-        {
-            buyer.Balance -= amount;
-        }
-
     }
 }

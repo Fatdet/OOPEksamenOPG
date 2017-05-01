@@ -6,3 +6,5 @@ C:\Users\frederik\Documents\Eksamensopgave2017\Eksamensopgave2017\obj\Debug\Eksa
 C:\Users\frederik\Documents\Eksamensopgave2017\Eksamensopgave2017\obj\Debug\Eksamensopgave2017.exe
 C:\Users\frederik\Documents\Eksamensopgave2017\Eksamensopgave2017\obj\Debug\Eksamensopgave2017.pdb
 C:\Users\Frederik\Documents\OOPEksamenOPG\Eksamensopgave2017\Eksamensopgave2017\bin\Debug\Eksamensopgave2017.exe.config
+C:\Users\frederik\Documents\OOPEksamenOPG\Eksamensopgave2017\Eksamensopgave2017\obj\Debug\Eksamensopgave2017.exe
+C:\Users\frederik\Documents\OOPEksamenOPG\Eksamensopgave2017\Eksamensopgave2017\obj\Debug\Eksamensopgave2017.pdb

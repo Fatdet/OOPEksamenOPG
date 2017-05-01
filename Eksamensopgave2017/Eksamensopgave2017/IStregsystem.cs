@@ -5,7 +5,7 @@ namespace Eksamensopgave2017
 {
     public interface IStregsystem
     {
-        /*
+        
         IEnumerable<Product> ActiveProducts { get; }
         InsertCashTransaction AddCreditsToAccount(User user, int amount);
         BuyTransaction BuyProduct(User user, Product product);
@@ -14,6 +14,8 @@ namespace Eksamensopgave2017
         User GetUser(Func<User, bool> predicate);
         User GetUserByUsername(string username);
         event UserBalanceNotification UserBalanceWarning;
-        */
+        
     }
+
+    public delegate void UserBalanceNotification(object sender, EventArgs args);
 }

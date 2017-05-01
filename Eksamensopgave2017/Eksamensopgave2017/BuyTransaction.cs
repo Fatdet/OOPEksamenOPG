@@ -22,5 +22,9 @@ namespace Eksamensopgave2017
         }
 
         // TODO implent execute
+        public override void Execute(User buyer, decimal amount)
+        {
+            buyer.Balance += amount;
+        }
     }
 }
