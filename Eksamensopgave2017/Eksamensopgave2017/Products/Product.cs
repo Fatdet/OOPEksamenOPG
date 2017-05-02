@@ -8,11 +8,10 @@ namespace Eksamensopgave2017
 {
     public class Product
     {
-        private static int _id = 1;
         public int Id { get; }
         public string Name { get; private set; }
         public decimal Price { get; private set ; }
-        public  bool IsActive { get; set; }
+        public  bool IsActive { get; private set ; }
         public bool CanBeBoughtOnCredit { get; set; }
 
         private bool SetName(string name)
@@ -23,6 +22,7 @@ namespace Eksamensopgave2017
             }
             else
             {
+                Name = name;
                 return true;
             }
         }
@@ -35,20 +35,26 @@ namespace Eksamensopgave2017
             }
             else
             {
+                Price = price;
                 return true;
             }
         }
 
         public override string ToString()
         {
-            return Id + Name + Price;
+            string template = "Product ID: {0}, name: {1} and price: {2}";
+            return string.Format(template, Id, Name, Price);
         }
 
-        public Product(string name, decimal price, bool isActive, bool canBeBoughtOnCredit)
+        public Product(int id, string name, decimal price, bool isActive, bool canBeBoughtOnCredit)
         {
+
             SetName(name);
-            Id = _id;
-            ++_id;
+            SetPrice(price);
+            IsActive = isActive;
+            CanBeBoughtOnCredit = canBeBoughtOnCredit;
+            Id = id;
+           
         }
     }
 }

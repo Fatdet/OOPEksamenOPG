@@ -17,20 +17,9 @@ namespace Eksamensopgave2017
 
             //ui.Start();*/
 
+            IStregsystem stregsystem = new Stregsystem();
+            IStregsystemUI ui = new StregsystemCLI(stregsystem);
 
-            User a = new User("frederik","schrøder","fatdet","asd@asd.c");
-
-
-            Console.WriteLine(a.UserID);
-            Console.WriteLine(a.FirstName);
-            Console.WriteLine(a.LastName);
-            Console.WriteLine(a.Email);
-            Console.WriteLine(a.UserName);
-            Console.WriteLine(a.GetHashCode());
-
-            SeasonalProduct b = new SeasonalProduct("test", 25,false,false,"26-12-2017","17-12-2017" );
-           
-            
             Console.ReadKey();
         }
     }

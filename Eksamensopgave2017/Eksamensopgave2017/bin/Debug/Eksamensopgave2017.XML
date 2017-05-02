@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Eksamensopgave2017</name>
+    </assembly>
+    <members>
+        <member name="M:Eksamensopgave2017.SeasonalProduct.#ctor(System.Int32,System.String,System.Decimal,System.Boolean,System.Boolean,System.String,System.String)">
+            <summary>
+             hallo
+            </summary>
+            <param name="id">Uniqe identity of product</param>
+            <param name="name"> Products name</param>
+            <param name="price"></param>
+            <param name="isActive"> Is the product avaliable to buy?</param>
+            <param name="canBeBoughtOnCredit"> Can this product be bought on credit? </param>
+            <param name="startDate"> (yyyy/mm/dd) use '/' or '-' to seperate day/month/year </param>
+            <param name="endDate"> (yyyy/mm/dd) use '/' or '-' to seperate day/month/year</param>
+        </member>
+    </members>
+</doc>

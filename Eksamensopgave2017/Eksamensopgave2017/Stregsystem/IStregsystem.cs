@@ -11,7 +11,7 @@ namespace Eksamensopgave2017
         BuyTransaction BuyProduct(User user, Product product);
         Product GetProductByID(int productID);
         IEnumerable<Transaction> GetTransactions(User user, int count);
-        User GetUser(Func<User, bool> predicate);
+        IEnumerable<User> GetUsers(Func<User, bool> predicate);
         User GetUserByUsername(string username);
         event UserBalanceNotification UserBalanceWarning;
         

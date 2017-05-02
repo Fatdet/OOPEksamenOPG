@@ -8,12 +8,11 @@ namespace Eksamensopgave2017
 {
     public class User : IComparable
     {
-        private static int _id = 1;
         //---------------
         // TODO Maybe make get only and set them in the constructor eller private
         //ToDO Hvordan skal man håndtere invalide input til klassen!?!? Burde nok laves i konstruktoren
         //---------------
-        public int UserID { get; }
+        public int Id { get; }
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
         public string UserName { get; private set; }
@@ -120,7 +119,7 @@ namespace Eksamensopgave2017
                 
             }
             User user = (User) obj;
-            return user.UserID - UserID;
+            return user.Id - this.Id;
         }
         //TODO Maybe add spaces between strings
         public override string ToString()
@@ -136,16 +135,16 @@ namespace Eksamensopgave2017
             }
             User user = obj as User;
                 
-            return user.UserID == this.UserID;
+            return user.Id == this.Id;
         }
 
         public override int GetHashCode()
         {
             // TODO check that the variables here is readonly so that the hashode never changes
-            return UserName.GetHashCode() + UserID;
+            return UserName.GetHashCode() + this.Id;
         }
 #endregion
-        public User(string firstName, string lastName, string userName, string email )
+        public User(int id, string firstName, string lastName, string userName, string email , decimal balance)
         {
             if (SetFirstName(firstName)
                 && SetLastName(lastName) 
@@ -158,10 +157,11 @@ namespace Eksamensopgave2017
             {
                 AllInfoCorrecet = false;
             }
+            Balance = balance;
+            //TODO change this test
             
             //TODO More logic here to determine if it should create this instance
-            UserID = _id;
-            _id = ++_id;
+            Id = id;
         }
     }
 }

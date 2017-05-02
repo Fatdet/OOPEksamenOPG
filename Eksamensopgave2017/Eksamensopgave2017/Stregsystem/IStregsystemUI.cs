@@ -1,8 +1,10 @@
-﻿namespace Eksamensopgave2017
+﻿using System;
+
+namespace Eksamensopgave2017
 {
     public interface IStregsystemUI
     {
-        /*
+        
         void DisplayUserNotFound(string username);
         void DisplayProductNotFound(string product);
         void DisplayUserInfo(User user);
@@ -14,7 +16,9 @@
         void DisplayInsufficientCash(User user, Product product);
         void DisplayGeneralError(string errorString);
         event StregsystemEvent CommandEntered; 
-        */
+        
         void Start();
     }
+
+    public delegate void StregsystemEvent(object sender, EventArgs args);
 }
