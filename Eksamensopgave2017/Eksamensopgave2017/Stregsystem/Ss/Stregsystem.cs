@@ -161,7 +161,7 @@ namespace Eksamensopgave2017
 
         public BuyTransaction BuyProduct(User user, Product product)
         {
-            BuyTransaction buyTrans = new BuyTransaction(user, 0, product);
+            BuyTransaction buyTrans = new BuyTransaction(user, product.Price, product);
             this.UserBalanceWarning += buyTrans.OnUserBalanceWarning;
             _transactionList.Add(buyTrans);
             if (user.Balance < 50)

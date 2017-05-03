@@ -5,11 +5,12 @@ namespace Eksamensopgave2017
 {
     class StregsystemCLI : IStregsystemUI
     {
-        // TODO might now be nessarry
+        private bool isRunning;
         private IStregsystem _stregsystem;
         public StregsystemCLI(IStregsystem stregsystem)
         {
             _stregsystem = stregsystem;
+            isRunning = true;
             Start();
         }
 
@@ -24,7 +25,7 @@ namespace Eksamensopgave2017
         public void DisplayProductNotFound(string product)
         {
             Console.Clear();
-            Console.WriteLine($"{product} kunne ikke findes i eksisterende produkter.");
+            Console.WriteLine($"Product id: {product} kunne ikke findes i eksisterende produkter.");
             Console.ReadKey();
         }
 
@@ -39,18 +40,23 @@ namespace Eksamensopgave2017
         {
             Console.Clear();
             Console.WriteLine("to many arguments");
+            Console.ReadKey();
+
         }
 
         public void DisplayAdminCommandNotFoundMessage(string adminCommand)
         {
             Console.Clear();
             Console.WriteLine($"{adminCommand} not found.");
+            Console.ReadKey();
         }
 
         public void DisplayUserBuysProduct(BuyTransaction transaction)
         {
             Console.Clear();
             Console.WriteLine(transaction.ToString());
+            Console.ReadKey();
+
         }
 
         public void DisplayUserBuysProduct(int count, BuyTransaction transaction)
@@ -75,18 +81,38 @@ namespace Eksamensopgave2017
 
         public event StregsystemEvent CommandEntered;
 
-        public void Start()
+        public void OnCommandEntered(string command)
         {
-            ListActiveProducts(_stregsystem.ActiveProducts);
+            if (CommandEntered != null)
+            {
+                CommandEntered(this, EventArgs.Empty, command);
+            }
         }
 
-        private void ListActiveProducts(IEnumerable<Product> productList)
+        public void Start()
         {
-            Console.WriteLine     (" __________________________________");
-            Console.WriteLine("\n\n | Id |         Produkt     | Pris  |");
+
+            while (isRunning)
+            {
+                DisplayActiveProducts(_stregsystem.ActiveProducts);
+                OnCommandEntered(HandleInput());
+            }
+        }
+
+        private string HandleInput()
+        {
+            Console.WriteLine("INput somethang biatch:");
+            return Console.ReadLine();
+        }
+
+        private void DisplayActiveProducts(IEnumerable<Product> productList)
+        {
+            Console.Clear();
+            Console.WriteLine(" __________________________________________________________________");
+            Console.WriteLine("|  Id  |                        Produkt                     | Pris |");
             foreach (Product product in productList)
             {
-                Console.WriteLine(string.Format("{0} | {1}|{2}|",product.Id, product.Name, product.Price));
+                Console.WriteLine(string.Format("| {0,4} | {1,51}|{2,6}|",product.Id, product.Name, product.Price));
             }
             Console.WriteLine();
         }

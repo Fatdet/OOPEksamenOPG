@@ -31,7 +31,7 @@ namespace Eksamensopgave2017
             try
             {
                 decimal credit = buyer.Balance;
-                credit += amount;
+                credit -= amount;
                 if (credit < 0)
                 {
                     throw new InsufficentCreditsException();

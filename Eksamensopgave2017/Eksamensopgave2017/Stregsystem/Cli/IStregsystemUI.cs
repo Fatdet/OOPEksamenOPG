@@ -20,5 +20,5 @@ namespace Eksamensopgave2017
         void Start();
     }
 
-    public delegate void StregsystemEvent(object sender, EventArgs args);
+    public delegate void StregsystemEvent(object sender, EventArgs args, string command);
 }
