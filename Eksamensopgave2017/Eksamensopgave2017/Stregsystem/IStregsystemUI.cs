@@ -20,5 +20,6 @@ namespace Eksamensopgave2017
         void Start();
     }
 
-    public delegate void StregsystemEvent(object sender, EventArgs args);
+    public delegate void StregsystemEvent(object sender, string command);
+    //TODO lave string en del af eventargs??
 }

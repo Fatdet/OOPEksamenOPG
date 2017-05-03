@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net.Mime;
 
 namespace Eksamensopgave2017
 {
@@ -60,7 +61,7 @@ namespace Eksamensopgave2017
 
         public void Close()
         {
-            throw new NotImplementedException();
+            Environment.Exit(0);
         }
 
         public void DisplayInsufficientCash(User user, Product product)
