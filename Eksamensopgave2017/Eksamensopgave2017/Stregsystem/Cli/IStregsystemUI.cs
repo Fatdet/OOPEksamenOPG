@@ -15,11 +15,15 @@ namespace Eksamensopgave2017
         void Close();
         void DisplayInsufficientCash(User user, Product product);
         void DisplayGeneralError(string errorString);
+        void DisplayTransaction(Transaction transaction);
+        void DisplayUserBalanceWarning();
+
+
         event StregsystemEvent CommandEntered; 
         
         void Start();
     }
 
-    public delegate void StregsystemEvent(object sender, string command);
-    //TODO lave string en del af eventargs??
+    public delegate void StregsystemEvent(object sender, EventArgs args, string command);
+
 }

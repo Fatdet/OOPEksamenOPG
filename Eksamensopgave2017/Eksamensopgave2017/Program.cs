@@ -19,8 +19,8 @@ namespace Eksamensopgave2017
 
             IStregsystem stregsystem = new Stregsystem();
             IStregsystemUI ui = new StregsystemCLI(stregsystem);
-
-            Console.ReadKey();
+            StregsystemController con = new StregsystemController(ui,stregsystem);
+            ui.Start();
         }
     }
 }

@@ -124,18 +124,22 @@ namespace Eksamensopgave2017
         {
             get
             {
-                foreach ( Product product in ProductList)
-                {
-                    if (product.IsActive)
-                    {
-                        _activeProductsList.Add(product);
-                    }
-  
-                }
                 return _activeProductsList;
             }
         }
 
+        public void UpdateActiveProducts()
+        {
+            _activeProductsList.RemoveAll( item => true);
+            foreach (Product product in ProductList)
+            {
+                if (product.IsActive)
+                {
+                    _activeProductsList.Add(product);
+                }
+
+            }
+        }
         //public delegate void UserBalanceNotification(object obj, EventArgs args);
 
         public event UserBalanceNotification UserBalanceWarning;
@@ -144,7 +148,6 @@ namespace Eksamensopgave2017
         {
             if (UserBalanceWarning != null)
             {
-                Console.WriteLine("hey");
                 UserBalanceWarning(this, EventArgs.Empty);
             }
         }
@@ -161,7 +164,7 @@ namespace Eksamensopgave2017
 
         public BuyTransaction BuyProduct(User user, Product product)
         {
-            BuyTransaction buyTrans = new BuyTransaction(user, 0, product);
+            BuyTransaction buyTrans = new BuyTransaction(user, product.Price, product);
             this.UserBalanceWarning += buyTrans.OnUserBalanceWarning;
             _transactionList.Add(buyTrans);
             if (user.Balance < 50)
@@ -247,6 +250,7 @@ namespace Eksamensopgave2017
         {
             GetProductsFromFile();
             GetUsersFromFile();
+            UpdateActiveProducts();
         }
     }
 }
