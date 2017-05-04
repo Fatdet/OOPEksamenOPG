@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Eksamensopgave2017
 {
-    class StregsystemController
+    public class StregsystemController
     {
         private IStregsystem _stregsystem;
         private IStregsystemUI _ui;
@@ -19,23 +19,106 @@ namespace Eksamensopgave2017
 
         public void ParseCommand(object source, EventArgs args, string command)
         {
-            string[] parameters = command.Split(' ');
-
-            if (parameters.Length == 1)
+            command = command.Trim(); // fjerner whitesplace fra start og slut
+            if (command.StartsWith(":"))
             {
-                FindUserInfo(parameters[0]);
-            }
-            else if (parameters.Length == 2)
-            {
-                BuyOneItem(parameters);
-            }
-            else if (parameters.Length == 3)
-            {
-                MultibuyItem(parameters);
+                AdminCommand(command);
             }
             else
             {
-                _ui.DisplayTooManyArgumentsError(command);
+                string[] parameters = command.Split(' ');
+
+                if (parameters.Length == 1)
+                {
+                    FindUserInfo(parameters[0]);
+                }
+                else if (parameters.Length == 2)
+                {
+                    BuyOneItem(parameters);
+                }
+                else if (parameters.Length == 3)
+                {
+                    MultibuyItem(parameters);
+                }
+                else
+                {
+                    _ui.DisplayTooManyArgumentsError(command);
+                }
+            }
+
+        }
+
+        private void AdminCommand(string commandparameters)
+        {
+            string[] parameters = commandparameters.Split(' ');
+            string command = parameters[0];
+
+            
+
+            parameters[0] = parameters[0].ToLower();
+            Dictionary<string, Action> adminCommands = new Dictionary<string, Action>();
+
+            switch (parameters.Length)
+            {
+                case 1:
+                    adminCommands.Add(":q", () => _ui.Close());
+                    adminCommands.Add(":quit", () => _ui.Close());
+                    if (adminCommands.ContainsKey(command))
+                    {
+                        adminCommands[command]();
+                    }
+                    else
+                    {
+                        _ui.DisplayAdminCommandNotFoundMessage(commandparameters);
+                    }
+                    break;
+                case 2:
+                    int id = int.Parse(parameters[1]);
+                    adminCommands.Add(":active", () => SetProductActive(id, true));
+                    adminCommands.Add(":deactive", () => SetProductActive(id, false));
+                    adminCommands.Add(":crediton", () => SetProductCredit(id, true));
+                    adminCommands.Add(":creditoff", () => SetProductCredit(id, false));
+                    Product product = _stregsystem.GetProductByID(id);
+                    if (product != null)
+                    {
+                        if (adminCommands.ContainsKey(command))
+                        {
+                            adminCommands[command]();
+                        }
+                        else
+                        {
+                            _ui.DisplayAdminCommandNotFoundMessage(commandparameters);
+                        }
+                    }
+                    else
+                    {
+                        _ui.DisplayProductNotFound(id.ToString());
+                    }
+                    break;
+                case 3:
+                    string userName = parameters[1];
+                    int credit = int.Parse(parameters[2]);
+                    adminCommands.Add(":addcredit", () => InsertCashTransaction(userName, credit));
+                    User user = _stregsystem.GetUserByUsername(userName);
+                    if (user != null)
+                    {
+                        if (adminCommands.ContainsKey(command))
+                        {
+                            adminCommands[command]();
+                        }
+                        else
+                        {
+                            _ui.DisplayAdminCommandNotFoundMessage(commandparameters);
+                        }
+                    }
+                    else
+                    {
+                        _ui.DisplayUserNotFound(userName);
+                    }
+                    break;
+                default:
+                    _ui.DisplayAdminCommandNotFoundMessage(commandparameters);
+                    break;
             }
         }
 
@@ -74,7 +157,7 @@ namespace Eksamensopgave2017
                 if (user != null)
                 {
                     Product product = _stregsystem.GetProductByID(int.Parse(id));
-                    if (product != null)
+                    if (product != null || product.IsActive)
                     {
                         BuyTransaction bt = _stregsystem.BuyProduct(user, product);
                         _ui.DisplayUserBuysProduct(bt);
@@ -108,7 +191,7 @@ namespace Eksamensopgave2017
                     if (user != null)
                     {
                         Product product = _stregsystem.GetProductByID(int.Parse(id));
-                        if (product != null)
+                        if (product != null || product.IsActive)
                         {
                             BuyTransaction bt = _stregsystem.BuyProduct(user, product);
                             _ui.DisplayUserBuysProduct(int.Parse(count),bt);
@@ -136,5 +219,37 @@ namespace Eksamensopgave2017
 
 
         }
+        private void SetProductActive(int id, bool isActive)
+        {
+            Product product = _stregsystem.GetProductByID(id);
+            if (product != null)
+            {
+                product.IsActive = isActive;
+                _stregsystem.UpdateActiveProducts();
+            }
+            else
+            {
+                _ui.DisplayProductNotFound(id.ToString());
+            }
+        }
+
+        private void SetProductCredit(int id, bool onCredit)
+        {
+            Product product = _stregsystem.GetProductByID(id);
+            if (product != null)
+            {
+                product.CanBeBoughtOnCredit = onCredit;
+            }
+        }
+
+        private void InsertCashTransaction(string username, int amount)
+        {
+            User user = _stregsystem.GetUserByUsername(username);
+            if (user != null)
+            {
+                _stregsystem.AddCreditsToAccount(user, amount);
+            }
+        }
+
     }
 }

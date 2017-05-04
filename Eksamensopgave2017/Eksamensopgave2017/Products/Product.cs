@@ -11,7 +11,7 @@ namespace Eksamensopgave2017
         public int Id { get; }
         public string Name { get; private set; }
         public decimal Price { get; private set ; }
-        public  bool IsActive { get; private set ; }
+        public  bool IsActive { get; set ; }
         public bool CanBeBoughtOnCredit { get; set; }
 
         private bool SetName(string name)

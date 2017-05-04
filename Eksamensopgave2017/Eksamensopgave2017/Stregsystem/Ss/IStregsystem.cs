@@ -10,9 +10,12 @@ namespace Eksamensopgave2017
         InsertCashTransaction AddCreditsToAccount(User user, int amount);
         BuyTransaction BuyProduct(User user, Product product);
         Product GetProductByID(int productID);
+
         IEnumerable<Transaction> GetTransactions(User user, int count);
-        IEnumerable<User> GetUsers(Func<User, bool> predicate);
+        User GetUser(Func<User, bool> predicate);
         User GetUserByUsername(string username);
+        void UpdateActiveProducts();
+
         event UserBalanceNotification UserBalanceWarning;
         
     }

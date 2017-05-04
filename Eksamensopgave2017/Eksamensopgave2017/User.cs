@@ -124,7 +124,7 @@ namespace Eksamensopgave2017
         //TODO Maybe add spaces between strings
         public override string ToString()
         {
-            return FirstName + LastName + Email;
+            return $"Name: {FirstName} {LastName}, Email: {Email}, Balance: {Balance} ";
         }
 
         public override bool Equals(object obj)

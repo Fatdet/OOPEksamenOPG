@@ -32,7 +32,6 @@ namespace Eksamensopgave2017
             Date = DateTime.Now;
             Buyer = buyer;
             Amount = amount;
-            Execute(buyer, amount);
         }
     }
 }

@@ -8,7 +8,6 @@ namespace Eksamensopgave2017
 {
     public class BuyTransaction : Transaction
     {
-        private const string _toBuy = "Bought item";
         public bool TransactionWasSuccesfull;
         public Product Product { get; }
 
@@ -21,8 +20,8 @@ namespace Eksamensopgave2017
 
         public override string ToString()
         {
-            //ToDO skal nok gøres bedre
-            return _toBuy + Product + Id + Buyer + Date;
+            return
+             $"Bought item {Product.ToString()} \nBuoght by {Buyer.ToString()}\nTransaction id: {Id}.  Time: {Date}";
         }
 
         // TODO implent execute
@@ -45,7 +44,7 @@ namespace Eksamensopgave2017
             }
             catch (InsufficentCreditsException e)
             {
-                Console.WriteLine(e);
+                //TODO excemptions
             }
             finally
             {

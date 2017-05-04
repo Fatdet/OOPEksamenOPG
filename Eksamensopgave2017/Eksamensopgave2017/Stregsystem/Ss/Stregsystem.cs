@@ -16,6 +16,7 @@ namespace Eksamensopgave2017
         public List<Product> ProductList { get { return _productList; } }
         public List<Transaction> TranactionsList { get { return _transactionList; } }
         //TODO transaktion list skal ligges i en log fil
+        //TODO husk at læse kommaer fra balance
         #region Get info from files
 
         private List<string> CsvFileReader(string path)
@@ -151,7 +152,7 @@ namespace Eksamensopgave2017
                 UserBalanceWarning(this, EventArgs.Empty);
             }
         }
-        
+
 
         public InsertCashTransaction AddCreditsToAccount(User user, int amount)
         {
@@ -189,10 +190,11 @@ namespace Eksamensopgave2017
             
             
         }
+        //TODO lav generisk måske??
 
         public Product GetProductByID(int productID)
         {
-            foreach (Product product in ProductList)
+            foreach (Product product in _productList)
             {
                 if (product.Id == productID)
                 {
@@ -221,16 +223,10 @@ namespace Eksamensopgave2017
             return userTransactions.AsEnumerable();
         }
 
-        public IEnumerable<User> GetUsers(Func<User, bool> predicate)
+        public User GetUser(Func<User, bool> predicate)
         {
-            foreach (User user in UserList)
-            {
-                if (predicate(user))
-                {
-                yield return user;
-                }
-            }
-            
+
+            return _userList.FirstOrDefault(predicate);
         }
 
         public User GetUserByUsername(string username)
@@ -245,6 +241,7 @@ namespace Eksamensopgave2017
             }
             return null;
         }
+
 
         public Stregsystem()
         {

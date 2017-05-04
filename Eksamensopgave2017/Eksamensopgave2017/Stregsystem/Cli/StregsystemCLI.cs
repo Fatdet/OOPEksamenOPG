@@ -26,7 +26,7 @@ namespace Eksamensopgave2017
         public void DisplayProductNotFound(string product)
         {
             Console.Clear();
-            Console.WriteLine($"Product id: {product} kunne ikke findes i eksisterende produkter.");
+            Console.WriteLine($"Product id: {product} kunne ikke findes blandt akive produkter.");
             Console.ReadKey();
         }
 
@@ -62,7 +62,13 @@ namespace Eksamensopgave2017
 
         public void DisplayUserBuysProduct(int count, BuyTransaction transaction)
         {
-            throw new NotImplementedException();
+            Console.Clear();
+            for (int i = 0; i < count; i++)
+            {
+                Console.WriteLine(transaction.ToString());
+            }
+            Console.ReadKey();
+
         }
 
         public void Close()
@@ -72,7 +78,10 @@ namespace Eksamensopgave2017
 
         public void DisplayInsufficientCash(User user, Product product)
         {
-            throw new NotImplementedException();
+            Console.Clear();
+            Console.WriteLine($"User {user.UserName} has insufficent cash to buy {product.ToString()}");
+            Console.ReadKey();
+
         }
 
         public void DisplayGeneralError(string errorString)
@@ -94,12 +103,17 @@ namespace Eksamensopgave2017
 
         public void DisplayUserBalanceWarning()
         {
-            
+            Console.Clear();
+            Console.WriteLine("Under 50.");
+            Console.ReadKey();
+
         }
         public void DisplayTransaction(Transaction transaction)
         {
             Console.Clear();
             Console.WriteLine(transaction.ToString());
+            Console.ReadKey();
+
         }
 
         public void Start()
