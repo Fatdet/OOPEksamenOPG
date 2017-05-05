@@ -8,13 +8,18 @@ namespace Eksamensopgave2017
     {
         private bool isRunning;
         private IStregsystem _stregsystem;
-        public StregsystemCLI(IStregsystem stregsystem)
+
+        public event StregsystemEvent CommandEntered;
+
+        public void OnCommandEntered(string command)
         {
-            _stregsystem = stregsystem;
-            isRunning = true;
-       
+            if (CommandEntered != null)
+            {
+                CommandEntered(this, EventArgs.Empty, command);
+            }
         }
 
+        #region Not Found errors
         public void DisplayUserNotFound(string username)
         {
             Console.Clear();
@@ -29,6 +34,16 @@ namespace Eksamensopgave2017
             Console.WriteLine($"Product id: {product} kunne ikke findes blandt akive produkter.");
             Console.ReadKey();
         }
+        public void DisplayAdminCommandNotFoundMessage(string adminCommand)
+        {
+            Console.Clear();
+            Console.WriteLine($"{adminCommand} not found.");
+            Console.ReadKey();
+        }
+
+        #endregion
+
+        #region Display user action
 
         public void DisplayUserInfo(User user)
         {
@@ -37,24 +52,10 @@ namespace Eksamensopgave2017
             Console.ReadKey();
         }
 
-        public void DisplayTooManyArgumentsError(string command)
-        {
-            Console.Clear();
-            Console.WriteLine("to many arguments");
-            Console.ReadKey();
-
-        }
-
-        public void DisplayAdminCommandNotFoundMessage(string adminCommand)
-        {
-            Console.Clear();
-            Console.WriteLine($"{adminCommand} not found.");
-            Console.ReadKey();
-        }
-
         public void DisplayUserBuysProduct(BuyTransaction transaction)
         {
             Console.Clear();
+            Console.WriteLine("Buy transation:");
             Console.WriteLine(transaction.ToString());
             Console.ReadKey();
 
@@ -63,48 +64,10 @@ namespace Eksamensopgave2017
         public void DisplayUserBuysProduct(int count, BuyTransaction transaction)
         {
             Console.Clear();
-            for (int i = 0; i < count; i++)
-            {
-                Console.WriteLine(transaction.ToString());
-            }
-            Console.ReadKey();
 
-        }
+            Console.WriteLine($"Buy transaction. nr {count}");
+            Console.WriteLine(transaction.ToString());
 
-        public void Close()
-        {
-            Environment.Exit(0);
-        }
-
-        public void DisplayInsufficientCash(User user, Product product)
-        {
-            Console.Clear();
-            Console.WriteLine($"User {user.UserName} has insufficent cash to buy {product.ToString()}");
-            Console.ReadKey();
-
-        }
-
-        public void DisplayGeneralError(string errorString)
-        {
-            Console.Clear();
-            Console.WriteLine(errorString);
-            Console.ReadKey();
-        }
-
-        public event StregsystemEvent CommandEntered;
-
-        public void OnCommandEntered(string command)
-        {
-            if (CommandEntered != null)
-            {
-                CommandEntered(this, EventArgs.Empty, command);
-            }
-        }
-
-        public void DisplayUserBalanceWarning()
-        {
-            Console.Clear();
-            Console.WriteLine("Under 50.");
             Console.ReadKey();
 
         }
@@ -113,7 +76,60 @@ namespace Eksamensopgave2017
             Console.Clear();
             Console.WriteLine(transaction.ToString());
             Console.ReadKey();
+        }
+        #endregion
 
+        #region Display errors
+        public void DisplayTooManyArgumentsError(string command)
+        {
+            Console.Clear();
+            Console.WriteLine($"Command: {command} had to many arguments.");
+            Console.ReadKey();
+
+        }
+        public void DisplayGeneralError(string errorString)
+        {
+            Console.Clear();
+            Console.WriteLine(errorString);
+            Console.ReadKey();
+        }
+
+        #endregion
+
+        #region display warnings
+        public void DisplayInsufficientCash(User user, Product product)
+        {
+            Console.Clear();
+            Console.WriteLine($"User {user.UserName} has insufficent cash to buy {product.ToString()}");
+            Console.ReadKey();
+
+        }
+        public void DisplayUserBalanceWarning(User user, decimal balance)
+        {
+            Console.Clear();
+            Console.WriteLine("User balance notification!");
+            Console.WriteLine($"User {user.UserName}'s balance is lower than 50 \nBalance is {balance}");
+            Console.ReadKey();
+
+        }
+
+        #endregion
+
+        public void ShowHelp()
+        {
+            Console.Clear();
+            Console.WriteLine("Avaliable Commands: \n" +
+                              "buy stuff: [username] [product_id]\n" +
+                              "buy multiple stuff: [username] [amount] [prodcut_id]\n"+
+                              ":q , :quit => To quit \n" +
+                              ":activate, :deactivate => :'activate [prodct_id]' to activate/deactivate product\n" +
+                              ":crediton, :cretioff => 'credition [product_id]' to turn buy on credit on/off \n" +
+                              ":addcredits => ':addcredits [username] [amount]' adds credit to a user");
+            Console.ReadKey();
+        }
+        public void Close()
+        {
+            Environment.Exit(0);
         }
 
         public void Start()
@@ -128,7 +144,7 @@ namespace Eksamensopgave2017
 
         private string HandleInput()
         {
-            Console.WriteLine("INput somethang biatch:");
+            Console.WriteLine("Awaiting user input:");
             return Console.ReadLine();
         }
 
@@ -139,9 +155,16 @@ namespace Eksamensopgave2017
             Console.WriteLine("|  Id  |                        Produkt                     | Pris |");
             foreach (Product product in activeProductList)
             {
-                Console.WriteLine($"| {product.Id,4} | {product.Name,51}|{product.Price,6}|");
+                Console.WriteLine($"| {product.Id,4} | {product.Name,-51}|{product.Price,6}|");
             }
-            Console.WriteLine();
+            Console.WriteLine("|__________________________________________________________________|");
+        }
+        public StregsystemCLI(IStregsystem stregsystem)
+        {
+            _stregsystem = stregsystem;
+            isRunning = true;
+            _stregsystem.UserBalanceWarning += DisplayUserBalanceWarning;
+
         }
     }
 }

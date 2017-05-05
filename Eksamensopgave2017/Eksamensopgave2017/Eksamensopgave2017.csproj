@@ -59,6 +59,8 @@
     <Compile Include="Stregsystem\StregsystemController.cs" />
     <Compile Include="Transactions\Transaction.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="Exceptions\UserAlreadyExistException.cs" />
+    <Compile Include="Exceptions\UserCouldNotBeCreatedException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

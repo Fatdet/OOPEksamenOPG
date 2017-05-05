@@ -10,7 +10,6 @@ namespace Eksamensopgave2017
 {
     public class InsufficentCreditsException : Exception
     {
-        //TODO måske fjerne nogle constructors
         #region Constructors
         public InsufficentCreditsException() : base("lol you are too poor to buy this xD")
         {

@@ -16,5 +16,16 @@
             <param name="startDate"> (yyyy/mm/dd) use '/' or '-' to seperate day/month/year </param>
             <param name="endDate"> (yyyy/mm/dd) use '/' or '-' to seperate day/month/year</param>
         </member>
+        <member name="M:Eksamensopgave2017.User.#ctor(System.Int32,System.String,System.String,System.String,System.String,System.Decimal)">
+            <summary>
+            Creates a user for the Stregsystem
+            </summary>
+            <param name="id">Gets checked if it is uniqe if not it will change</param>
+            <param name="firstName">may not be null</param>
+            <param name="lastName">may not be null</param>
+            <param name="userName">may only contain [a-z], [0-9] and '_'</param>
+            <param name="email">standard email</param>
+            <param name="balance">users current balance</param>
+        </member>
     </members>
 </doc>

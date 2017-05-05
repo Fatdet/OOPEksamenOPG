@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace Eksamensopgave2017
 {
-    public class User : IComparable
+    public class User : IComparable<User>
     {
-        //---------------
-        // TODO Maybe make get only and set them in the constructor eller private
-        //ToDO Hvordan skal man håndtere invalide input til klassen!?!? Burde nok laves i konstruktoren
-        //---------------
+        private  static List<string> _UsedUserNames = new List<string>();
         public int Id { get; }
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
@@ -19,7 +16,7 @@ namespace Eksamensopgave2017
         public string Email { get; private set; }
         public decimal Balance { get; set; }
         public  bool AllInfoCorrecet { get; }
-
+        //TODO implemt static list of usernames and Id
         #region Setters
 
         private bool SetFirstName(string firstName)
@@ -49,9 +46,6 @@ namespace Eksamensopgave2017
         // Returns false when name could not be set.
         private bool SetUserName(string name)
         {
-            //-------
-            // TODO Dobbelt tjek at ! er de rigtige steder
-            //-------
             if (name == null
                 || !name.All(c => Char.IsLower(c)
                 || Char.IsDigit(c)
@@ -61,7 +55,13 @@ namespace Eksamensopgave2017
             }
             else
             {
+                if (_UsedUserNames.Contains(UserName))
+                {
+                    throw new UserAlreadyExistException();
+                }
+
                 UserName = name;
+                _UsedUserNames.Add(UserName);
                 return true;
             }
         }
@@ -103,64 +103,53 @@ namespace Eksamensopgave2017
             Email = email;
             return true;
         }
-#endregion
+        #endregion
         #region Implemented methods
 
-        // TODO find bedre Icomparable der er mere hensigtmæssig (generisk)
-        public int CompareTo(Object obj)
-        {
-
-            try
-            {
-                //lav exception på det her
-            }
-            catch (Exception message)
-            {
-                
-            }
-            User user = (User) obj;
-            return user.Id - this.Id;
-        }
-        //TODO Maybe add spaces between strings
         public override string ToString()
         {
-            return $"Name: {FirstName} {LastName}, Email: {Email}, Balance: {Balance} ";
+            return $"Name: {FirstName} {LastName}, Email: {Email}, \nBalance: {Balance} ";
+        }
+        public int CompareTo(User user)
+        {
+            return user.Id - this.Id;
         }
 
         public override bool Equals(object obj)
         {
-            if (obj == null || obj.GetType() != typeof(User)) //simplificere?
+            User user = obj as User;
+            if (user == null) 
             {
                 return false;
             }
-            User user = obj as User;
-                
             return user.Id == this.Id;
         }
 
         public override int GetHashCode()
         {
-            // TODO check that the variables here is readonly so that the hashode never changes
             return UserName.GetHashCode() + this.Id;
         }
-#endregion
+        #endregion
+        /// <summary>
+        /// Creates a user for the Stregsystem
+        /// </summary>
+        /// <param name="id">Gets checked if it is uniqe if not it will change</param>
+        /// <param name="firstName">may not be null</param>
+        /// <param name="lastName">may not be null</param>
+        /// <param name="userName">may only contain [a-z], [0-9] and '_'</param>
+        /// <param name="email">standard email</param>
+        /// <param name="balance">users current balance</param>
         public User(int id, string firstName, string lastName, string userName, string email , decimal balance)
         {
-            if (SetFirstName(firstName)
+            if (!(SetFirstName(firstName)
                 && SetLastName(lastName) 
                 && SetUserName(userName)
-                &&SetEmail(email))
+                &&SetEmail(email)))
             {
-                AllInfoCorrecet = true;
-            }
-            else
-            {
-                AllInfoCorrecet = false;
+                throw new UserCouldNotBeCreatedException();
             }
             Balance = balance;
-            //TODO change this test
-            
-            //TODO More logic here to determine if it should create this instance
+
             Id = id;
         }
     }

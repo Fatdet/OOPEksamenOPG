@@ -16,9 +16,9 @@ namespace Eksamensopgave2017
         void DisplayInsufficientCash(User user, Product product);
         void DisplayGeneralError(string errorString);
         void DisplayTransaction(Transaction transaction);
-        void DisplayUserBalanceWarning();
+        void DisplayUserBalanceWarning(User user, decimal balance);
 
-
+        void ShowHelp();
         event StregsystemEvent CommandEntered; 
         
         void Start();

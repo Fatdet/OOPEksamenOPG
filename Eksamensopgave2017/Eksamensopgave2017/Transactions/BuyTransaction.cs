@@ -11,52 +11,33 @@ namespace Eksamensopgave2017
         public bool TransactionWasSuccesfull;
         public Product Product { get; }
 
-        public BuyTransaction(User buyer, decimal amount, Product product) : base(buyer, amount)
-        {
-            Product = product;
-            Execute(buyer,amount);
-            
-        }
-
         public override string ToString()
         {
             return
-             $"Bought item {Product.ToString()} \nBuoght by {Buyer.ToString()}\nTransaction id: {Id}.  Time: {Date}";
+             $"id: {Id} Bought item {Product.ToString()} \nBuoght by {Buyer.ToString()}\nTransaction Time: {Date}\n\n";
         }
 
-        // TODO implent execute
         public override void Execute(User buyer, decimal amount)
         {
-            try
+            decimal credit = buyer.Balance;
+            credit -= amount;
+            if (credit < 0 && Product.CanBeBoughtOnCredit == false)
             {
-                decimal credit = buyer.Balance;
-                credit -= amount;
-                if (credit < 0)
-                {
-                    throw new InsufficentCreditsException();
-                }
-                else
-                {
-                    buyer.Balance = credit;
-                    TransactionWasSuccesfull = true;
-                }
-
+                throw new InsufficentCreditsException();
             }
-            catch (InsufficentCreditsException e)
+            else
             {
-                //TODO excemptions
+                buyer.Balance = credit;
+                TransactionWasSuccesfull = true;
             }
-            finally
-            {
-                TransactionWasSuccesfull = false;
-            }
-            //TODO insufficentCreditException 
-
         }
 
-        public void OnUserBalanceWarning(object source, EventArgs args)
+
+        public BuyTransaction(User buyer, decimal amount, Product product) : base(buyer, amount)
         {
-            // TODO onUserBalanceWarning
+            Product = product;
+            Execute(buyer, amount);
+
         }
     }
 }

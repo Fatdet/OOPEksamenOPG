@@ -10,6 +10,7 @@ namespace Eksamensopgave2017
         InsertCashTransaction AddCreditsToAccount(User user, int amount);
         BuyTransaction BuyProduct(User user, Product product);
         Product GetProductByID(int productID);
+        Product GetPro(Func<Product, bool> predicate);
 
         IEnumerable<Transaction> GetTransactions(User user, int count);
         User GetUser(Func<User, bool> predicate);
@@ -20,5 +21,5 @@ namespace Eksamensopgave2017
         
     }
 
-    public delegate void UserBalanceNotification(object sender, EventArgs args);
+    public delegate void UserBalanceNotification(User user, Decimal balance);
 }

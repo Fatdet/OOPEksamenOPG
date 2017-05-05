@@ -12,7 +12,6 @@ namespace Eksamensopgave2017
         public DateTime StartDate { get; private set; }
         public DateTime EndDate { get; private set; }
 
-        // TODO divide into sub methods
         private bool SetDate(string dateString)
         {
             DateTime date;
@@ -24,7 +23,7 @@ namespace Eksamensopgave2017
                 time[i] = int.Parse(timeSubstring[i]);
             }
             string[] dateSubstring = dateAndTime[0].Split('-', '/');
-            // Checks how many parts the string is split into
+            // Checks if the string arrays length is differnet than 3 if så something from the file is wrong
 
             if (dateSubstring.Length != 3)
             {
@@ -47,7 +46,7 @@ namespace Eksamensopgave2017
             // Checks that the dates are valid
             if (dates[2] < 1 || dates[2] > 31)
             {
-                //TODO better date checking
+                // Burde kigge efter skudår osv, men det er en mindre implemtations detlaje jeg ikke dømmer værd at lave lige pt
                 return false;
             }
             if (dates[1] < 1 || dates[1] > 12)
@@ -60,19 +59,20 @@ namespace Eksamensopgave2017
             }
             date = new DateTime(dates[0], dates[1], dates[2],time[0], time[1], time[2]);
             // Checks if the end date is after the start date
-            if (StartDate.CompareTo(DateTime.MinValue) != 0 ) // == If startdate is differnet than null
+            if (StartDate.CompareTo(DateTime.MinValue) != 0 ) // == If startdate is different than null
             {
+                // Hvis enddate kommer efter startdate
                 if (date.CompareTo(StartDate) != -1)
                 {
-                    //Todo skal nok flyttes
                     EndDate = date;
                     return false;
                 }
             }
+
             StartDate = date;
             return true;
         }
-        //TODO stardate skal måske ændres til datetime som paramteret
+  
         // Maybe override Active to be more specific
         /// <summary>
         ///  hallo
@@ -89,7 +89,6 @@ namespace Eksamensopgave2017
         {
             SetDate(startDate);
             SetDate(endDate);
-            //TODO more logic
         }
 
     }

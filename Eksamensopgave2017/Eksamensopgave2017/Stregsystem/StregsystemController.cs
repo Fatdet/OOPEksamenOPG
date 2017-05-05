@@ -63,6 +63,7 @@ namespace Eksamensopgave2017
                 case 1:
                     adminCommands.Add(":q", () => _ui.Close());
                     adminCommands.Add(":quit", () => _ui.Close());
+                    adminCommands.Add(":help", () => _ui.ShowHelp());
                     if (adminCommands.ContainsKey(command))
                     {
                         adminCommands[command]();
@@ -98,7 +99,7 @@ namespace Eksamensopgave2017
                 case 3:
                     string userName = parameters[1];
                     int credit = int.Parse(parameters[2]);
-                    adminCommands.Add(":addcredit", () => InsertCashTransaction(userName, credit));
+                    adminCommands.Add(":addcredits", () => InsertCashTransaction(userName, credit));
                     User user = _stregsystem.GetUserByUsername(userName);
                     if (user != null)
                     {
@@ -128,7 +129,6 @@ namespace Eksamensopgave2017
             if (user != null)
             {
                 _ui.DisplayUserInfo(user);
-                // TODO måske implemeter så man kan vælge hvor mange tranaktioner man vil se?
                 // maks 10 tranaktioner må vises i følge opg beskrivelsen
                 IEnumerable<Transaction> userTransactions = _stregsystem.GetTransactions(user, 10);
                 foreach (Transaction transaction in userTransactions)
@@ -137,8 +137,7 @@ namespace Eksamensopgave2017
                 }
                 if (user.Balance < 50)
                 {
-                    //_ui.displa
-                    //TODO implemet userbalance warning
+                    _ui.DisplayUserBalanceWarning(user, user.Balance);
                 }
             }
             else
@@ -159,8 +158,16 @@ namespace Eksamensopgave2017
                     Product product = _stregsystem.GetProductByID(int.Parse(id));
                     if (product != null || product.IsActive)
                     {
-                        BuyTransaction bt = _stregsystem.BuyProduct(user, product);
-                        _ui.DisplayUserBuysProduct(bt);
+                        try
+                        {
+                            BuyTransaction bt = _stregsystem.BuyProduct(user, product);
+                            _ui.DisplayUserBuysProduct(bt);
+                        }
+                        catch (InsufficentCreditsException)
+                        {
+                            _ui.DisplayInsufficientCash(user, product);
+                        }
+
                     }
                     else
                     {
@@ -181,10 +188,11 @@ namespace Eksamensopgave2017
         private void MultibuyItem(string[] paramaters)
         {
             string userName = paramaters[0];
-            string count = paramaters[1];
+            string countstr = paramaters[1];
             string id = paramaters[2];
-            if (count.All(c => char.IsDigit(c)))
+            if (countstr.All(c => char.IsDigit(c)))
             {
+                int count = int.Parse(countstr);
                 if (id.All(c => char.IsDigit(c)))
                 {
                     User user = _stregsystem.GetUserByUsername(userName);
@@ -193,9 +201,18 @@ namespace Eksamensopgave2017
                         Product product = _stregsystem.GetProductByID(int.Parse(id));
                         if (product != null || product.IsActive)
                         {
-                            BuyTransaction bt = _stregsystem.BuyProduct(user, product);
-                            _ui.DisplayUserBuysProduct(int.Parse(count),bt);
-                            //TODO måske implemeter userbalance warning her
+                            try
+                            {
+                                for (int i = 0; i < count; i++)
+                                {
+                                    BuyTransaction bt = _stregsystem.BuyProduct(user, product);
+                                    _ui.DisplayUserBuysProduct(i + 1, bt);
+                                }
+                            }
+                            catch (InsufficentCreditsException)
+                            {
+                                _ui.DisplayInsufficientCash(user, product);
+                            }
                         }
                         else
                         {
@@ -214,7 +231,7 @@ namespace Eksamensopgave2017
             }
             else
             {
-                _ui.DisplayGeneralError($"The count was not a number, you wrote: {count}");
+                _ui.DisplayGeneralError($"The count was not a number, you wrote: {countstr}");
             }
 
 
@@ -226,6 +243,8 @@ namespace Eksamensopgave2017
             {
                 product.IsActive = isActive;
                 _stregsystem.UpdateActiveProducts();
+                _ui.DisplayGeneralError($"Product {product.Name} isactive status now sat to {isActive}");
+
             }
             else
             {
@@ -239,6 +258,11 @@ namespace Eksamensopgave2017
             if (product != null)
             {
                 product.CanBeBoughtOnCredit = onCredit;
+                _ui.DisplayGeneralError($"Product {product.Name} bought on credit now sat to {onCredit}");
+            }
+            else
+            {
+                _ui.DisplayProductNotFound(id.ToString());
             }
         }
 
@@ -247,7 +271,15 @@ namespace Eksamensopgave2017
             User user = _stregsystem.GetUserByUsername(username);
             if (user != null)
             {
-                _stregsystem.AddCreditsToAccount(user, amount);
+                if (amount > 0)
+                {
+                    InsertCashTransaction iCT = _stregsystem.AddCreditsToAccount(user, amount);
+                    _ui.DisplayTransaction(iCT);
+                }
+                else
+                {
+                    _ui.DisplayGeneralError("Cannot insert negative cash.");
+                }
             }
         }
 

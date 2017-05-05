@@ -11,13 +11,14 @@ namespace Eksamensopgave2017
         private const string _cashIn = "Cash In";
         public InsertCashTransaction(User buyer, decimal amount) : base(buyer, amount)
         {
+            Execute(buyer, amount);
         }
 
         public override string ToString()
         {
-            return _cashIn + Id + Buyer + Amount.ToString() + Date;
+            return $"id: {Id} Added {Amount} credits to user{Buyer} \nTransaction Time: {Date}";
         }
-        // TODO Implemt execute
+
         public override void Execute(User buyer, decimal amount)
         {
             buyer.Balance += amount;

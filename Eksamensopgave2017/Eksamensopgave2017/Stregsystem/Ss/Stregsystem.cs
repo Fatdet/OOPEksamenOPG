@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -15,10 +16,19 @@ namespace Eksamensopgave2017
         public List<User> UserList { get { return _userList; } }
         public List<Product> ProductList { get { return _productList; } }
         public List<Transaction> TranactionsList { get { return _transactionList; } }
-        //TODO transaktion list skal ligges i en log fil
-        //TODO husk at læse kommaer fra balance
-        #region Get info from files
+        public IEnumerable<Product> ActiveProducts { get { return _activeProductsList; } }
 
+        public event UserBalanceNotification UserBalanceWarning;
+
+        protected virtual void OnUserBalanceWarning(User user, decimal balance)
+        {
+            if (UserBalanceWarning != null)
+            {
+                UserBalanceWarning(user, balance);
+            }
+        }
+
+        #region Get info from files
         private List<string> CsvFileReader(string path)
         {
             List<string> stringList = new List<string>();
@@ -31,41 +41,6 @@ namespace Eksamensopgave2017
             }
             fileCsvReader.Close();
             return stringList;
-        }
-        private void GetProductsFromFile()
-        {
-            List<string> productStringList = CsvFileReader("../../products.csv");
-            for (int i = 0; i < productStringList.Count; i++)
-            {
-                productStringList[i] = RemoveHTMLTags(productStringList[i]);
-                string[] tss = productStringList[i].Split(';');
-                if (tss[0].All(c => Char.IsLetter(c)))
-                {
-                    //Makes sure that the header dosen't get included
-                }
-                else if (tss[4] != "")
-                {
-                    int id = int.Parse(tss[0]);
-                    string name = tss[1];
-                    decimal price = Decimal.Parse(tss[2]);
-                    bool isActive = (tss[3] == "1");
-                    bool canBeBoughtOnCredit = false; //TODO der står ikke noget i filen om dette?
-                    string endDate = tss[4];
-
-                    _productList.Add(new SeasonalProduct(id, name, price, isActive, canBeBoughtOnCredit, "2000-11-21 00:00:00", endDate));
-                }
-                else
-                {
-                    int id = int.Parse(tss[0]);
-                    string name = tss[1];
-                    decimal price = Decimal.Parse(tss[2]);
-                    bool isActive = (tss[3] == "1");
-                    bool canBeBoughtOnCredit = false; //TODO der står ikke noget i filen om dette?
-
-                    _productList.Add(new Product(id, name, price, isActive, canBeBoughtOnCredit));
-
-                }
-            } 
         }
         private string RemoveHTMLTags(string fileDate)
         {
@@ -98,7 +73,43 @@ namespace Eksamensopgave2017
 
             return new string(dateChars, 0, lengthOfNewString);
         }
+        private void GetProductsFromFile()
+        {
+            List<string> productStringList = CsvFileReader("../../products.csv");
+            for (int i = 0; i < productStringList.Count; i++)
+            {
+                productStringList[i] = RemoveHTMLTags(productStringList[i]);
+                string[] tss = productStringList[i].Split(';');
+                if (tss[0].All(c => Char.IsLetter(c)))
+                {
+                    //Makes sure that the header dosen't get included
+                }
+                else if (tss[4] != "")
+                {
+                    // Not a seasonel product
+                    int id = int.Parse(tss[0]);
+                    string name = tss[1];
+                    decimal price = Decimal.Parse(tss[2]) / 100;
+                    bool isActive = (tss[3] == "1");
+                    bool canBeBoughtOnCredit = false; 
+                    string endDate = tss[4];
 
+                    _productList.Add(new SeasonalProduct(id, name, price, isActive, canBeBoughtOnCredit, "2000-11-21 00:00:00", endDate));
+                }
+                else
+                {
+                    // Seasonel product
+                    int id = int.Parse(tss[0]);
+                    string name = tss[1];
+                    decimal price = Decimal.Parse(tss[2]) / 100;
+                    bool isActive = (tss[3] == "1");
+                    bool canBeBoughtOnCredit = false; 
+
+                    _productList.Add(new Product(id, name, price, isActive, canBeBoughtOnCredit));
+
+                }
+            }
+        }
         private void GetUsersFromFile()
         {
             List<String> userFileList = CsvFileReader("../../users.csv");
@@ -113,21 +124,57 @@ namespace Eksamensopgave2017
                     string lastName = uISs[2];
                     string userName = uISs[3];
                     string eMail = uISs[4];
-                    decimal balance = decimal.Parse(uISs[5]);
-
-                    _userList.Add(new User(id, firstName, lastName, userName, eMail, balance));
+                    decimal balance = decimal.Parse(uISs[5], CultureInfo.InvariantCulture);
+                    // CultureInfo makes the decimal.parse aware of the '.' in the csv file så than it gets the value 100.0 instead of 1000
+                    try
+                    {
+                        _userList.Add(new User(id, firstName, lastName, userName, eMail, balance));
+                    }
+                    catch (UserCouldNotBeCreatedException)
+                    {
+                        // Man kunne vel lave en reference til ui men det har jeg ikke så håndtere ikke så meget ved exceptionen
+                    }
+                    
                 }
                 
             }
         }
-#endregion
-        public IEnumerable<Product> ActiveProducts
+        #endregion
+
+        #region Get thing from id/username
+
+        public User GetUser(Func<User, bool> predicate)
         {
-            get
-            {
-                return _activeProductsList;
-            }
+
+            return _userList.FirstOrDefault(predicate);
         }
+
+        public Product GetProductByID(int productID)
+        {
+            foreach (Product product in _productList)
+            {
+                if (product.Id == productID)
+                {
+                    return product;
+                }
+            }
+            return null;
+        }
+        public User GetUserByUsername(string username)
+        {
+            username = username.ToLower();
+            foreach (User user in _userList)
+            {
+                if (user.UserName == username)
+                {
+                    return user;
+                }
+            }
+            return null;
+        }
+        #endregion
+
+
 
         public void UpdateActiveProducts()
         {
@@ -138,20 +185,12 @@ namespace Eksamensopgave2017
                 {
                     _activeProductsList.Add(product);
                 }
-
             }
         }
-        //public delegate void UserBalanceNotification(object obj, EventArgs args);
 
-        public event UserBalanceNotification UserBalanceWarning;
 
-        protected virtual void OnUserBalanceWarning()
-        {
-            if (UserBalanceWarning != null)
-            {
-                UserBalanceWarning(this, EventArgs.Empty);
-            }
-        }
+
+
 
 
         public InsertCashTransaction AddCreditsToAccount(User user, int amount)
@@ -166,11 +205,10 @@ namespace Eksamensopgave2017
         public BuyTransaction BuyProduct(User user, Product product)
         {
             BuyTransaction buyTrans = new BuyTransaction(user, product.Price, product);
-            this.UserBalanceWarning += buyTrans.OnUserBalanceWarning;
             _transactionList.Add(buyTrans);
             if (user.Balance < 50)
             {
-                OnUserBalanceWarning();
+                OnUserBalanceWarning(user, user.Balance);
             }
             LogTransaction(buyTrans.ToString());
             return buyTrans;
@@ -178,31 +216,12 @@ namespace Eksamensopgave2017
 
         private void LogTransaction(string logText)
         {
-            //TODO maybe clear log when rpograms starts?
             string path = "../../logfile.log";
-            if (!File.Exists(path))
-            {
-                File.Create(path);
-            }
-            StreamWriter sw = new StreamWriter(path);
+            StreamWriter sw = new StreamWriter(path, true);
             sw.WriteLine(logText);
             sw.Close();
-            
-            
         }
-        //TODO lav generisk måske??
 
-        public Product GetProductByID(int productID)
-        {
-            foreach (Product product in _productList)
-            {
-                if (product.Id == productID)
-                {
-                    return product;
-                }
-            }
-            return null;
-        }
 
         public IEnumerable<Transaction> GetTransactions(User user, int count)
         {
@@ -223,24 +242,8 @@ namespace Eksamensopgave2017
             return userTransactions.AsEnumerable();
         }
 
-        public User GetUser(Func<User, bool> predicate)
-        {
 
-            return _userList.FirstOrDefault(predicate);
-        }
 
-        public User GetUserByUsername(string username)
-        {
-            username = username.ToLower();
-            foreach (User user in _userList)
-            {
-                if (user.UserName == username)
-                {
-                    return user;
-                }
-            }
-            return null;
-        }
 
 
         public Stregsystem()
