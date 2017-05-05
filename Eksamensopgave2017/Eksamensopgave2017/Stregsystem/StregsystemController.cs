@@ -156,16 +156,28 @@ namespace Eksamensopgave2017
                 if (user != null)
                 {
                     Product product = _stregsystem.GetProductByID(int.Parse(id));
-                    if (product != null || product.IsActive)
+                    if (product != null )
                     {
                         try
                         {
-                            BuyTransaction bt = _stregsystem.BuyProduct(user, product);
-                            _ui.DisplayUserBuysProduct(bt);
+                            if (product.IsActive)
+                            {
+                                BuyTransaction bt = _stregsystem.BuyProduct(user, product);
+                                _ui.DisplayUserBuysProduct(bt);
+                            }
+                            else
+                            {
+                                _ui.DisplayProductNotFound(id);
+                            }
+
                         }
                         catch (InsufficentCreditsException)
                         {
                             _ui.DisplayInsufficientCash(user, product);
+                        }
+                        catch (Exception message)
+                        {
+                            _ui.DisplayGeneralError(message.Message);
                         }
 
                     }
@@ -199,15 +211,23 @@ namespace Eksamensopgave2017
                     if (user != null)
                     {
                         Product product = _stregsystem.GetProductByID(int.Parse(id));
-                        if (product != null || product.IsActive)
+                        if (product != null )
                         {
                             try
                             {
-                                for (int i = 0; i < count; i++)
+                                if (product.IsActive)
                                 {
-                                    BuyTransaction bt = _stregsystem.BuyProduct(user, product);
-                                    _ui.DisplayUserBuysProduct(i + 1, bt);
+                                    for (int i = 0; i < count; i++)
+                                    {
+                                        BuyTransaction bt = _stregsystem.BuyProduct(user, product);
+                                        _ui.DisplayUserBuysProduct(i + 1, bt);
+                                    }
                                 }
+                                else
+                                {
+                                    _ui.DisplayProductNotFound(id);
+                                }
+
                             }
                             catch (InsufficentCreditsException)
                             {
